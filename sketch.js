@@ -31,7 +31,7 @@ let startTime;
 let remainingTime;
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(600, 400);
   loadLevel(currentLevel); // レベルの読み込み
 }
 
@@ -39,28 +39,30 @@ function setup() {
 function loadLevel(level) {
   numCols = levelCols[level - 1];
   numRows = levelRows[level - 1];
+  
+  showDuration = levelShowDurations[level - 1];
+  appearInterval = levelAppearIntervals[level - 1];
+  
   // 2次元配列を再定義
   holeX = Array.from(Array(numCols),()=>new Array(numRows));
   holeY = Array.from(Array(numCols),()=>new Array(numRows));
   isUp = Array.from(Array(numCols),()=>new Array(numRows));
   moleTimer = Array.from(Array(numCols),()=>new Array(numRows));
   
-  showDuration = levelShowDurations[level - 1];
-  appearInterval = levelAppearIntervals[level - 1];
   
-  // --- 中央配置の計算ロジック ---
-  let gap = 100; // 穴の間隔
-  // 穴が並ぶ全体の幅と高さ
-  let totalWidth = (numCols - 1) * gap;
-  let totalHeight = (numRows - 1) * gap;
-  // 画面の中央に配置するための開始位置
-  let startX = (width - totalWidth) / 2;
-  let startY = (height - totalHeight) / 2;
+  let totalWidth = width * 0.8;
+  let gap = (numCols>1)? totalWidth/(numCols-1):0;
   
+  let rowGap = 100;
+  let totalHeight=(numRows-1)*rowGap;
+  
+  let startX = (width - (numCols - 1) * gap) / 2;
+  let startY = (height - totalHeight) / 2;
+  
   for (let col = 0; col < numCols; col++) {
     for (let row = 0; row < numRows; row++) {
       holeX[col][row] = startX + (col * gap);
-      holeY[col][row] = startY + (row * gap);
+      holeY[col][row] = startY + (row * rowGap);
       isUp[col][row] = false;
       moleTimer[col][row]=0;
     }
